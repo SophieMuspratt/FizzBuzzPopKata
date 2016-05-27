@@ -1,31 +1,76 @@
 package FizzBuzz;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FizzBuzz {
-	
+
+	private List<Rule> rules;
+
+	public FizzBuzz() {
+		rules = new ArrayList<>();
+		// Set up rules for Feature 1-2
+		rules.add(new FizzRule());
+		rules.add(new BuzzRule());
+		rules.add(new PopRule());
+
+		// //Add new rules for Feature 3
+		rules.add(new Rule(8, "Bang "));
+	}
+
+	public FizzBuzz(List<Rule> rules) {
+		this.rules = rules;
+	}
+
 	public String numberReturned(Integer number) {
 		String output = "";
-		boolean multipleOfSeven = number % 7 == 0;
-		boolean multipleOfFive = number % 5 == 0;
-		boolean multipleOfThree = number % 3 == 0;
-		
-		if (multipleOfThree && multipleOfFive && multipleOfSeven) {
-			output = "Fizz Buzz Pop";
-		} else if (multipleOfFive && multipleOfSeven) {
-			output = "Buzz Pop";
-		} else if (multipleOfThree && multipleOfSeven) {
-			output = "Fizz Pop";
-		} else if (multipleOfThree && multipleOfFive) {
-			output = "Fizz Buzz";
-		} else if (multipleOfSeven) {
-			output = "Pop";
-		} else if (multipleOfFive) {
-			output = "Buzz";
-		} else if (multipleOfThree) {
-			output = "Fizz";
-		} else {
-			output = number.toString();
+
+		for (Rule rule : rules) {
+			output += rule.check(number);
 		}
-		return output;
+
+		if (output.equals("")) {
+			output += number.toString();
+		}
+
+		return output.trim();
 	}
-	
+
+	public static class Rule {
+
+		private int divisor;
+		private String replacement;
+
+		public Rule(int divisor, String replacement) {
+			this.divisor = divisor;
+			this.replacement = replacement;
+		}
+
+		public String check(int number) {
+			if (number % divisor == 0)
+				return replacement;
+			return "";
+		}
+	}
+
+	public static class FizzRule extends Rule {
+		public FizzRule() {
+			super(3, "Fizz ");
+		}
+
+	}
+
+	public static class BuzzRule extends Rule {
+		public BuzzRule() {
+			super(5, "Buzz ");
+		}
+
+	}
+
+	public static class PopRule extends Rule {
+		public PopRule() {
+			super(7, "Pop ");
+		}
+
+	}
 }
